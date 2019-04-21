@@ -130,7 +130,7 @@ public class Main {
         program = new Startingprogramm();
     }
 
-    public  static void main(String[] args) throws IOException {
+    public  static void fmain(String[] args) throws IOException {
 
         if(args.length == 0){
             System.out.println("Введите адресс и порт в соответствующем порядке!");
@@ -156,7 +156,6 @@ public class Main {
         System.out.println("Введите команду help для получения полного списка команд.");
         while (true) {
                 try {
-
                     TransferPackage tpkg;
                     if (line.length() == 0) {
 
@@ -303,6 +302,50 @@ public class Main {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public static void sendPackage(TransferPackage transferPackage, DatagramSocket socket, InetAddress adress, int port) throws IOException{
+        byte[] tpkgBytes = transferPackage.getBytes();
+        Byte[] bytes = new Byte[tpkgBytes.length];
+        for(int i = 0; i < tpkgBytes.length; i++){
+            bytes[i] = tpkgBytes[i];
+        }
+        ArrayList<Byte> list =new ArrayList<>();
+        Collections.addAll(list, bytes);
+        List<List<Byte>> choppedList = chopped(list, 1022);
+        int N = (choppedList.size() - 1);
+        for(int j = 0; j < choppedList.size(); j++) {
+            List<Byte> subList = choppedList.get(j);
+            byte[] subBytes = new byte[subList.size() + 2];
+            for (int i = 2; i < subBytes.length; i++) {
+                subBytes[i] = subList.get(i);
+            }
+            subBytes[1] = (byte)N;
+            subBytes[0] = (byte)j;
+
+            socket.send(new DatagramPacket(subBytes, subBytes.length, adress, port));
+            byte[] receiveData = new byte[1];
+            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
+            socket.receive(receivePacket);
+            if (receivePacket.getData()[0] == 1){
+                continue;
+            }
+            else{
+                throw new SocketTimeoutException();
+            }
+        }
+
+    }
+
+    static <T> List<List<T>> chopped(List<T> list, final int L) {
+        List<List<T>> parts = new ArrayList<List<T>>();
+        final int N = list.size();
+        for (int i = 0; i < N; i += L) {
+            parts.add(new ArrayList<T>(
+                    list.subList(i, Math.min(N, i + L)))
+            );
+        }
+        return parts;
     }
 }
 
