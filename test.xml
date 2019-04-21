@@ -1,0 +1,94 @@
+<array>
+    <topClothes>
+        <growth_sm>170</growth_sm>
+        <size>60</size>
+        <color>Red</color>
+        <material>Chlopoc</material>
+        <is_hood>true</is_hood>
+        <name>T-Shirt</name>
+        <is_for_man>true</is_for_man>
+        <hand_sm_length>60</hand_sm_length>
+    </topClothes>
+    <downClothes>
+        <size>50</size>
+        <color>White</color>
+        <material>Chlopoc</material>
+        <diametr_leg_sm>40</diametr_leg_sm>
+        <name>Trousers</name>
+        <leg_length_sm>30</leg_length_sm>
+        <is_for_man>true</is_for_man>
+    </downClothes>
+    <underwear>
+        <sex_lvl>20</sex_lvl>
+        <size>25</size>
+        <color>Black</color>
+        <material>Chlopoc</material>
+        <name>Panties</name>
+        <is_for_man>true</is_for_man>
+    </underwear>
+    <hat>
+        <cylinder_height_sm>15</cylinder_height_sm>
+        <size>50</size>
+        <color>White</color>
+        <material>Len</material>
+        <visor_length_sm>20</visor_length_sm>
+        <name>BaseballHat</name>
+        <is_for_man>true</is_for_man>
+    </hat>
+    <shoes>
+        <is_shoelaces>true</is_shoelaces>
+        <size>38</size>
+        <color>White</color>
+        <material>Leather</material>
+        <outsole_material>Rubber</outsole_material>
+        <name>Sneackers</name>
+        <is_for_man>true</is_for_man>
+    </shoes>
+</array>
+<array>
+<topClothes>
+    <growth_sm>170</growth_sm>
+    <size>50</size>
+    <color>Gray</color>
+    <material>Chlopoc</material>
+    <is_hood>false</is_hood>
+    <name>T-Shirt</name>
+    <is_for_man>true</is_for_man>
+    <hand_sm_length>60</hand_sm_length>
+</topClothes>
+<downClothes>
+    <size>50</size>
+    <color>Black</color>
+    <material>Chlopoc</material>
+    <diametr_leg_sm>40</diametr_leg_sm>
+    <name>Pants</name>
+    <leg_length_sm>80</leg_length_sm>
+    <is_for_man>true</is_for_man>
+</downClothes>
+<underwear>
+    <sex_lvl>100</sex_lvl>
+    <size>30</size>
+    <color>Black</color>
+    <material>Chlopoc</material>
+    <name>Panties</name>
+    <is_for_man>true</is_for_man>
+</underwear>
+<hat>
+    <cylinder_height_sm>15</cylinder_height_sm>
+    <size>50</size>
+    <color>Black</color>
+    <material>Len</material>
+    <visor_length_sm>20</visor_length_sm>
+    <name>BaseballHat</name>
+    <is_for_man>true</is_for_man>
+</hat>
+<shoes>
+    <is_shoelaces>true</is_shoelaces>
+    <size>38</size>
+    <color>Brown</color>
+    <material>Leather</material>
+    <outsole_material>Rubber</outsole_material>
+    <name>Boots</name>
+    <is_for_man>true</is_for_man>
+</shoes>
+</array>
