@@ -132,7 +132,6 @@ public class Main {
     }
 
     public  static void main(String[] args) throws IOException {
-
         if(args.length == 0){
             System.out.println("Введите адресс и порт в соответствующем порядке!");
             System.exit(0);
@@ -306,6 +305,10 @@ public class Main {
                                 break;
                             case 110:
                                 if(recievedPkg.getAdditionalData()[0] == 1){
+                                    user.setLoggedIn(true);
+                                    System.out.println("Вы успешно зарегистрированы!");
+                                }
+                                if(recievedPkg.getAdditionalData()[0] == 2){
                                     user.setLoggedIn(true);
                                     System.out.println("Вы успешно авторизированы!");
                                 }
