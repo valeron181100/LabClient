@@ -130,7 +130,7 @@ public class Main {
         program = new Startingprogramm();
     }
 
-    public  static void fmain(String[] args) throws IOException {
+    public  static void main(String[] args) throws IOException {
 
         if(args.length == 0){
             System.out.println("Введите адресс и порт в соответствующем порядке!");
@@ -161,7 +161,7 @@ public class Main {
 
                         try {
 
-                            line = scanner.nextLine();
+                            line = "help";
                             String input = line.split(" ")[0];
                             if (!manager.isDefaultFileExists()) {
                                 switch (input) {
@@ -208,7 +208,9 @@ public class Main {
 
                     byte[] sendData = tpkg.getBytes();
                     DatagramPacket sendingPkg = new DatagramPacket(sendData, sendData.length, IPAddress, port);
-                    clientSocket.send(sendingPkg);
+                    //clientSocket.send(sendingPkg);
+                    sendPackage(tpkg,clientSocket,IPAddress, port);
+
 
                     byte[] receiveData = new byte[65536];
                     DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
@@ -318,21 +320,11 @@ public class Main {
             List<Byte> subList = choppedList.get(j);
             byte[] subBytes = new byte[subList.size() + 2];
             for (int i = 2; i < subBytes.length; i++) {
-                subBytes[i] = subList.get(i);
+                subBytes[i] = subList.get(i-2);
             }
             subBytes[1] = (byte)N;
             subBytes[0] = (byte)j;
-
             socket.send(new DatagramPacket(subBytes, subBytes.length, adress, port));
-            byte[] receiveData = new byte[1];
-            DatagramPacket receivePacket = new DatagramPacket(receiveData, receiveData.length);
-            socket.receive(receivePacket);
-            if (receivePacket.getData()[0] == 1){
-                continue;
-            }
-            else{
-                throw new SocketTimeoutException();
-            }
         }
 
     }
