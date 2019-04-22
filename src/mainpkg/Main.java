@@ -6,6 +6,7 @@ import Enums.*;
 import FileSystem.*;
 import Humanlike.*;
 import NetStuff.TransferPackage;
+import NetStuff.User;
 import PhoneNTalks.*;
 import java.io.*;
 import java.net.*;
@@ -153,18 +154,38 @@ public class Main {
         final boolean[] isConnected = {true};
         String line = "";
         int previousCmdId = 0;
-        System.out.println("Введите команду help для получения полного списка команд.");
+        User user = new User();
+        //System.out.println("Введите команду help для получения полного списка команд.");
         while (true) {
                 try {
 
-                    TransferPackage tpkg;
+                    TransferPackage tpkg = null;
                     if (line.length() == 0) {
 
                         try {
+                            String input = null;
+                            if(user.isLoggedIn()) {
+                                line = scanner.nextLine();
+                                 input = line.split(" ")[0];
+                            }
+                            else {
+                                if(line.length() == 0) {
+                                    System.out.println("Пожалуйста введите логин и пароль:");
+                                    System.out.print("Логин: ");
+                                    user.setLogin(scanner.next());
+                                    System.out.print("Пароль: ");
+                                    user.setPassword(scanner.next());
+                                    System.out.println();
+                                    line = "login";
+                                    tpkg = new TransferPackage(110, "login", null, (user.getLogin() + "|" + user.getPassword()).getBytes(Main.DEFAULT_CHAR_SET));
+                                }
+                                else{
+                                    tpkg = new TransferPackage(110, "login", null, (user.getLogin() + "|" + user.getPassword()).getBytes(Main.DEFAULT_CHAR_SET));
+                                }
+                            }
 
-                            line = scanner.nextLine();
-                            String input = line.split(" ")[0];
-                            if (!manager.isDefaultFileExists()) {
+                            /// Блок кода разрешающий выполнение упомянутых в блоке комманд если файл не существует
+                            if (!manager.isDefaultFileExists() && user.isLoggedIn()) {
                                 switch (input) {
                                     case "help":
                                     case "change_def_file_path":
@@ -176,13 +197,15 @@ public class Main {
 
                                 }
                             }
+                            ///.....
 
                         } catch (NoSuchElementException e) {
                             System.err.println("Завершение работы программы.");
                             System.exit(0);
                         }
-                        tpkg = new TransferPackage(666, line,
-                                null, manager.getXmlFromFile().getBytes(Main.DEFAULT_CHAR_SET));
+                        if (user.isLoggedIn())
+                            tpkg = new TransferPackage(666, line,
+                                    null, manager.getXmlFromFile().getBytes(Main.DEFAULT_CHAR_SET));
                     } else {
                         if(previousCmdId == 6) {
                             byte[] bytes;
@@ -207,8 +230,17 @@ public class Main {
                         }
                     }
 
+                    if(user.getLogin().length() == 0){
+                        System.out.println("Ваш логин не должен быть пустым!");
+                        continue;
+                    }
+                    if (user.getPassword().length() < 8){
+                        System.out.println("Пароль должен быть не менее 8-ми символов!");
+                        continue;
+                    }
                     byte[] sendData = tpkg.getBytes();
                     DatagramPacket sendingPkg = new DatagramPacket(sendData, sendData.length, IPAddress, port);
+
                     clientSocket.send(sendingPkg);
 
                     byte[] receiveData = new byte[65536];
@@ -275,6 +307,13 @@ public class Main {
                                 break;
                             case 101:
                                 System.out.println("Соединение с сервером восстановлено!");
+                                break;
+                            case 110:
+                                if(recievedPkg.getAdditionalData()[0] == 1){
+                                    user.setLoggedIn(true);
+                                    System.out.println("Вы успешно авторизированы!");
+                                }
+                                break;
                         }
 
 
