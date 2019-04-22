@@ -158,10 +158,8 @@ public class Main {
         //System.out.println("Введите команду help для получения полного списка команд.");
         while (true) {
                 try {
-
                     TransferPackage tpkg = null;
                     if (line.length() == 0) {
-
                         try {
                             String input = null;
                             if(user.isLoggedIn()) {
@@ -169,19 +167,16 @@ public class Main {
                                  input = line.split(" ")[0];
                             }
                             else {
-                                if(line.length() == 0) {
-                                    System.out.println("Пожалуйста введите логин и пароль:");
-                                    System.out.print("Логин: ");
-                                    user.setLogin(scanner.next());
-                                    System.out.print("Пароль: ");
-                                    user.setPassword(scanner.next());
-                                    System.out.println();
-                                    line = "login";
-                                    tpkg = new TransferPackage(110, "login", null, (user.getLogin() + "|" + user.getPassword()).getBytes(Main.DEFAULT_CHAR_SET));
-                                }
-                                else{
-                                    tpkg = new TransferPackage(110, "login", null, (user.getLogin() + "|" + user.getPassword()).getBytes(Main.DEFAULT_CHAR_SET));
-                                }
+                                System.out.println("Пожалуйста введите логин и пароль:");
+                                System.out.print("Логин: ");
+                                String login = scanner.nextLine();
+                                user.setLogin(login);
+                                System.out.print("Пароль: ");
+                                String password = scanner.nextLine();
+                                user.setPassword(password);
+                                System.out.println();
+                                line = "login";
+                                tpkg = new TransferPackage(110, "login", null, (user.getLogin() + "|" + user.getPassword()).getBytes(Main.DEFAULT_CHAR_SET));
                             }
 
                             /// Блок кода разрешающий выполнение упомянутых в блоке комманд если файл не существует
@@ -232,15 +227,16 @@ public class Main {
 
                     if(user.getLogin().length() == 0){
                         System.out.println("Ваш логин не должен быть пустым!");
+                        line = "";
                         continue;
                     }
                     if (user.getPassword().length() < 8){
                         System.out.println("Пароль должен быть не менее 8-ми символов!");
+                        line = "";
                         continue;
                     }
                     byte[] sendData = tpkg.getBytes();
                     DatagramPacket sendingPkg = new DatagramPacket(sendData, sendData.length, IPAddress, port);
-
                     clientSocket.send(sendingPkg);
 
                     byte[] receiveData = new byte[65536];
@@ -313,7 +309,6 @@ public class Main {
                                     user.setLoggedIn(true);
                                     System.out.println("Вы успешно авторизированы!");
                                 }
-                                break;
                         }
 
 
