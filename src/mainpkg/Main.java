@@ -5,6 +5,7 @@ import Clothes.Costume;
 import Enums.*;
 import FileSystem.*;
 import Humanlike.*;
+import NetStuff.ShutdownHandler;
 import NetStuff.TransferPackage;
 import NetStuff.User;
 import PhoneNTalks.*;
@@ -154,6 +155,7 @@ public class Main {
         String line = "";
         int previousCmdId = 0;
         User user = new User();
+        Runtime.getRuntime().addShutdownHook(new ShutdownHandler(user, clientSocket, IPAddress, port));
         //System.out.println("Введите команду help для получения полного списка команд.");
         while (true) {
                 try {
@@ -175,7 +177,7 @@ public class Main {
                                 user.setPassword(password);
                                 System.out.println();
                                 line = "login";
-                                tpkg = new TransferPackage(110, "login", null, (user.getLogin() + "|" + user.getPassword()).getBytes(Main.DEFAULT_CHAR_SET));
+                                tpkg = new TransferPackage(110, "login {" + user.getLogin() +"} {"+user.getPassword()+"}", null);
                             }
 
                             /// Блок кода разрешающий выполнение упомянутых в блоке комманд если файл не существует
