@@ -13,6 +13,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -166,6 +167,11 @@ public class Main {
                             String input = null;
                             if(user.isLoggedIn()) {
                                 line = scanner.nextLine();
+                                if(line.equals(" ")) {
+                                    System.out.println("Ошибка:\nНеверная комманда!");
+                                    line = "";
+                                    continue;
+                                }
                                  input = line.split(" ")[0];
                             }
                             else {
@@ -201,15 +207,17 @@ public class Main {
                             System.exit(0);
                         }
                         if (user.isLoggedIn())
-                            tpkg = new TransferPackage(666, line,
-                                    null, manager.getXmlFromFile().getBytes(Main.DEFAULT_CHAR_SET));
+                            if(line.trim().equals("load"))
+                                tpkg = new TransferPackage(666, line,
+                                        null, manager.getXmlFromFile().getBytes(Main.DEFAULT_CHAR_SET));
+                            else
+                                tpkg = new TransferPackage(666, line, null);
                     } else {
                         if(previousCmdId == 6) {
                             byte[] bytes;
                             try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                                 DataOutputStream dos = new DataOutputStream(baos)) {
-                                dos.writeUTF(manager.getXmlFromFile());
-                                dos.writeUTF(manager.getXmlFromFile(line));
+                                 ObjectOutputStream dos = new ObjectOutputStream(baos)) {
+                                dos.writeObject(CollectionManager.getCollectionFromXML(manager.getXmlFromFile(line)));
                                 bytes = baos.toByteArray();
                             }
                             line = "I1A8S1D1F0G0H";
@@ -222,8 +230,11 @@ public class Main {
                                         null, CollectionManager.collectionStringXML.getBytes(Main.DEFAULT_CHAR_SET));
                             }
                             else
+                            if(line.trim().equals("load"))
                                 tpkg = new TransferPackage(666, line,
-                                    null, manager.getXmlFromFile().getBytes(Main.DEFAULT_CHAR_SET));
+                                        null, manager.getXmlFromFile().getBytes(Main.DEFAULT_CHAR_SET));
+                            else
+                                tpkg = new TransferPackage(666, line, null);
                         }
                     }
 
@@ -274,6 +285,7 @@ public class Main {
                             case 6:
                                 previousCmdId = recievedPkg.getId();
                                 line = new String(recievedPkg.getAdditionalData(), Main.DEFAULT_CHAR_SET);
+                                System.out.println(line);
                                 if(new File(new String(recievedPkg.getAdditionalData(), Main.DEFAULT_CHAR_SET)).exists())
                                     continue;
                                 else
