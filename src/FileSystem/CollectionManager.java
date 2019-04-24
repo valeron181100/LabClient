@@ -48,6 +48,17 @@ public class CollectionManager {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
+    public static HashSet<Costume> getCollectionFromBytes(byte[] bytes){
+        try(ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
+            ObjectInputStream ois = new ObjectInputStream(bais)){
+            return (HashSet<Costume>)ois.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            System.err.println("Ошибка: не удалось сериализовать коллекцию");
+        }
+        return null;
+    }
+
     /**
      * Получает XML строку из коллекции.
      * @author Валерий Бондарь

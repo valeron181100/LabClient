@@ -13,6 +13,7 @@ import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -269,7 +270,6 @@ public class Main {
                             case 601:
                                 previousCmdId = recievedPkg.getId();
                                 System.out.println(recievedPkg.getCmdData());
-                                manager.writeCollectionXML(new String(recievedPkg.getAdditionalData(), Main.DEFAULT_CHAR_SET));
                                 break;
                             case 6:
                                 previousCmdId = recievedPkg.getId();
@@ -296,13 +296,12 @@ public class Main {
                             case 8:
                                 previousCmdId = recievedPkg.getId();
                                 System.out.println(recievedPkg.getCmdData());
-                                try {
-                                    new Main().program.start(CollectionManager.getCollectionFromXML(manager.getXmlFromFile()));
-                                } catch (EmptyFileException e) {
-                                    System.err.println("Файл пуст!");
-                                }
+                                new Main().program.start(new HashSet<>(recievedPkg.getData().collect(Collectors.toList())));
                                 break;
                             case 101:
+                                TransferPackage transferPackage = new TransferPackage(666, "login {" + user.getLogin() + "} {" + user.getPassword() + "}", null);
+                                byte[] bytes = transferPackage.getBytes();
+                                clientSocket.send(new DatagramPacket(bytes, bytes.length, IPAddress, port));
                                 System.out.println("Соединение с сервером восстановлено!");
                                 break;
                             case 110:
@@ -314,6 +313,10 @@ public class Main {
                                     user.setLoggedIn(true);
                                     System.out.println("Вы успешно авторизированы!");
                                 }
+                                break;
+                            case 12:
+                                manager.writeCollection(CollectionManager.getCollectionFromBytes(recievedPkg.getAdditionalData()));
+                                System.out.println(recievedPkg.getCmdData());
                         }
 
 
