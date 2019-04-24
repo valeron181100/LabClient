@@ -14,6 +14,8 @@ import java.net.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class Main {
@@ -167,8 +169,8 @@ public class Main {
                             String input = null;
                             if(user.isLoggedIn()) {
                                 line = scanner.nextLine();
-                                if(line.equals(" ")) {
-                                    System.out.println("Ошибка:\nНеверная комманда!");
+                                if(findMatches("[ \\?\\\\n\\\\t!/.\\^\\:\\%\\$\\;\\#\\\"\\'\\,\\(\\)\\+\\=\\`\\~]", line).size() != 0) {
+                                     System.out.println("Ошибка:\nНеверная комманда!");
                                     line = "";
                                     continue;
                                 }
@@ -238,13 +240,13 @@ public class Main {
                         }
                     }
 
-                    if(user.getLogin().length() == 0){
-                        System.out.println("Ваш логин не должен быть пустым!");
+                    if(user.getLogin().length() == 0 || findMatches("[ \\?\\\\n\\\\t!/.\\^\\:\\%\\,\\$\\;\\#\\\"\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0){
+                        System.out.println("Неправильный ввод логина!");
                         line = "";
                         continue;
                     }
-                    if (user.getPassword().length() < 8){
-                        System.out.println("Пароль должен быть не менее 8-ми символов!");
+                    if (user.getPassword().length() < 8  || findMatches("[ \\?\\\\n\\\\t!/.\\^\\:\\%\\$\\,\\;\\#\\\"\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0){
+                        System.out.println("Пароль должен быть не менее 8-ми символов и не содержать специальных символов!");
                         line = "";
                         continue;
                     }
@@ -348,6 +350,16 @@ public class Main {
                     System.err.println(e.getMessage());
                 }
         }
+    }
+
+    public static ArrayList<String> findMatches(String patterStr, String text){
+        Pattern pattern = Pattern.compile(patterStr);
+        Matcher matcher = pattern.matcher(text);
+        ArrayList<String> collection = new ArrayList<>();
+        while(matcher.find()){
+            collection.add(text.substring(matcher.start(), matcher.end()));
+        }
+        return collection;
     }
 
     public static void pause(String message){
