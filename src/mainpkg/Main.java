@@ -169,7 +169,7 @@ public class Main {
                             String input = null;
                             if(user.isLoggedIn()) {
                                 line = scanner.nextLine();
-                                if(findMatches("[ \\?\\\\!/.\\^\\:\\%\\,\\$\\;\\#\\\"\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0) {
+                                if(line.matches(" +") || findMatches("[\\?\\\\!/.\\^\\:\\%\\,\\$\\;\\#\\\"\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0) {
                                      System.out.println("Ошибка:\nНеверная комманда!");
                                     line = "";
                                     continue;
@@ -240,16 +240,18 @@ public class Main {
                         }
                     }
 
-                    if(user.getLogin().length() == 0 || findMatches("[ \\?\\\\!/.\\^\\:\\%\\,\\$\\;\\#\\\"\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0){
+                    if(user.getLogin().length() == 0 || findMatches("[\\?\\\\!/.\\^\\:\\%\\,\\$\\;\\#\\\"\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0){
                         System.out.println("Неправильный ввод логина!");
                         line = "";
                         continue;
                     }
-                    if (user.getPassword().length() < 8  || findMatches("[ \\?\\\\!/.\\^\\:\\%\\,\\$\\;\\#\\\"\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0){
+                    if (user.getPassword().length() < 8  || findMatches("[\\?\\\\!/.\\^\\:\\%\\,\\$\\;\\#\\\"\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0){
                         System.out.println("Пароль должен быть не менее 8-ми символов и не содержать специальных символов!");
                         line = "";
                         continue;
                     }
+
+                    tpkg.setUser(user);
                     byte[] sendData = tpkg.getBytes();
                     DatagramPacket sendingPkg = new DatagramPacket(sendData, sendData.length, IPAddress, port);
                     clientSocket.send(sendingPkg);
