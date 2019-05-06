@@ -168,7 +168,7 @@ public class Main {
                         try {
                             String input = null;
                             if(user.isLoggedIn()) {
-                                line = scanner.nextLine();
+                                line = scanMultiLines(scanner);
                                 if(line.matches(" +") || findMatches("[\\?\\\\!/.\\^\\:\\%\\,\\$\\;\\#\\\"\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0) {
                                      System.out.println("Ошибка:\nНеверная комманда!");
                                     line = "";
@@ -362,6 +362,23 @@ public class Main {
             collection.add(text.substring(matcher.start(), matcher.end()));
         }
         return collection;
+    }
+
+    public static String scanMultiLines(Scanner scanner){
+        StringBuilder input = new StringBuilder();
+        String cur = "";
+        while(true){
+            cur = scanner.nextLine();
+            if(cur.matches(".*\\$")){
+                input.append(cur.substring(0, cur.length() - 1));
+                break;
+            }
+            else{
+                input.append(cur);
+            }
+        }
+
+        return input.toString();
     }
 
     public static void pause(String message){
