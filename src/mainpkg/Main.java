@@ -169,10 +169,17 @@ public class Main {
                             String input = null;
                             if(user.isLoggedIn()) {
                                 line = scanMultiLines(scanner);
-                                if(line.matches(" +") || findMatches("[\\?\\\\!/.\\^\\:\\%\\,\\$\\;\\#\\\"\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0) {
+                                if(line.matches("^ +$") || findMatches("[\\?\\\\!/\\^\\%\\$\\;\\#\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0) {
                                      System.out.println("Ошибка:\nНеверная комманда!");
                                     line = "";
                                     continue;
+                                }
+                                String loginRegex = "login \\{.+} \\{.+}";
+                                if(line.matches(loginRegex)){
+                                    new ShutdownHandler(user, clientSocket, IPAddress, port).run();
+                                    String[] logParts = line.split(" ");
+                                    user.setLogin(logParts[1].substring(1,logParts[1].length() - 1));
+                                    user.setPassword(logParts[2].substring(1,logParts[2].length() - 1));
                                 }
                                  input = line.split(" ")[0];
                             }
@@ -240,12 +247,12 @@ public class Main {
                         }
                     }
 
-                    if(user.getLogin().length() == 0 || findMatches("[\\?\\\\!/.\\^\\:\\%\\,\\$\\;\\#\\\"\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0){
+                    if(user.getLogin().length() == 0 || findMatches("[\\?\\\\!/\\^\\%\\$\\;\\#\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0){
                         System.out.println("Неправильный ввод логина!");
                         line = "";
                         continue;
                     }
-                    if (user.getPassword().length() < 8  || findMatches("[\\?\\\\!/.\\^\\:\\%\\,\\$\\;\\#\\\"\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0){
+                    if (user.getPassword().length() < 8  || findMatches("[\\?\\\\!/\\^\\%\\$\\;\\#\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0){
                         System.out.println("Пароль должен быть не менее 8-ми символов и не содержать специальных символов!");
                         line = "";
                         continue;
