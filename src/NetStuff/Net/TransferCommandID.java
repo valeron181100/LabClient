@@ -1,4 +1,4 @@
-package NetStuff;
+package NetStuff.Net;
 
 public enum TransferCommandID {
 

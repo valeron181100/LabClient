@@ -1,4 +1,4 @@
-package NetStuff;
+package NetStuff.Net;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -6,7 +6,6 @@ import java.io.ObjectOutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 
 public class ShutdownHandler extends Thread {
 

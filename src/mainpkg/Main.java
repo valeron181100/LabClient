@@ -5,15 +5,14 @@ import Clothes.Costume;
 import Enums.*;
 import FileSystem.*;
 import Humanlike.*;
-import NetStuff.ShutdownHandler;
-import NetStuff.TransferPackage;
-import NetStuff.User;
+import NetStuff.Net.ShutdownHandler;
+import NetStuff.Net.TransferPackage;
+import NetStuff.Net.User;
 import PhoneNTalks.*;
 import java.io.*;
 import java.net.*;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -184,16 +183,51 @@ public class Main {
                                  input = line.split(" ")[0];
                             }
                             else {
-                                System.out.println("Пожалуйста введите логин и пароль:");
-                                System.out.print("Логин: ");
-                                String login = scanner.nextLine();
-                                user.setLogin(login);
-                                System.out.print("Пароль: ");
-                                String password = scanner.nextLine();
-                                user.setPassword(password);
-                                System.out.println();
-                                line = "login";
-                                tpkg = new TransferPackage(110, "login {" + user.getLogin() +"} {"+user.getPassword()+"}", null);
+                                System.out.println("Если вы хотите зарегистрироваться, то введите 'signin'; если войти - 'login':");
+                                String request = scanner.nextLine().trim();
+                                if(request.equals("login")) {
+                                    System.out.print("Логин: ");
+                                    String login = scanner.nextLine();
+                                    user.setLogin(login);
+                                    System.out.print("Пароль: ");
+                                    String password = scanner.nextLine();
+                                    user.setPassword(password);
+                                    System.out.println();
+                                    line = "login";
+                                    tpkg = new TransferPackage(110, "login {" + user.getLogin() + "} {" + user.getPassword() + "}", null);
+                                }else if(request.equals("signin")){
+                                    System.out.print("Логин: ");
+                                    String login = scanner.nextLine();
+                                    System.out.print("Пароль: ");
+                                    String password = scanner.nextLine();
+                                    System.out.print("Повторите пароль: ");
+                                    String repeatPassword = scanner.nextLine();
+                                    System.out.print("EMAIL: ");
+                                    String emailInput = scanner.nextLine();
+                                    if(emailInput.matches("^[-a-z0-9!#$%&'*+/=?^_`{|}~]+(?:\\.[-a-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])$")){
+                                        user.setEmail(emailInput);
+                                    }
+                                    else{
+                                        System.out.println("Ошибка: некорректный email! Попробуйте еще раз)");
+                                        line = "";
+                                        continue;
+                                    }
+                                    if(password.equals(repeatPassword))
+                                        user.setPassword(password);
+                                    else{
+                                        System.out.println("Ошибка: пароли не совпадают! Попробуйте еще раз)");
+                                        line = "";
+                                        continue;
+                                    }
+                                    user.setLogin(login);
+                                    System.out.println();
+                                    line = "login";
+                                    tpkg = new TransferPackage(110, "login {" + user.getLogin() + "} {" + user.getPassword() + "} {" + user.getEmail() + "}", null);
+                                }else{
+                                    System.out.println("Ошибка: неверный ввод! Попробуйте еще раз)");
+                                    line = "";
+                                    continue;
+                                }
                             }
 
                             /// Блок кода разрешающий выполнение упомянутых в блоке комманд если файл не существует
@@ -395,6 +429,15 @@ public class Main {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    public static int strHashCode(String str){
+        int result = 13;
+        int prime = 26;
+        for (int i = 0; i < str.length(); i++) {
+            result = result * prime + (int)str.charAt(i) * (int)Math.pow(prime, i + 1);
+        }
+        return result;
     }
 }
 

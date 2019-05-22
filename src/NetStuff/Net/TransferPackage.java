@@ -1,4 +1,4 @@
-package NetStuff;
+package NetStuff.Net;
 
 import Clothes.Costume;
 

@@ -1,9 +1,8 @@
 package FileSystem;
 
 import Clothes.Costume;
-import NetStuff.TransferPackage;
+import NetStuff.Net.TransferPackage;
 
-import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import mainpkg.Main;
 import org.json.JSONException;
 import org.json.JSONObject;
