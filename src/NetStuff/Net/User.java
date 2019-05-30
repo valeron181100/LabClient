@@ -57,7 +57,7 @@ public class User implements Serializable, iQuery {
     }
 
     public String getUncryptedPassword() {
-        return password;
+        return "ZYbGwVUa" + password;
     }
 
     public String getEmail() {
