@@ -194,7 +194,7 @@ public class Main {
                                     user.setPassword(password);
                                     System.out.println();
                                     line = "login";
-                                    tpkg = new TransferPackage(110, "login {" + user.getLogin() + "} {" + user.getPassword() + "}", null);
+                                    tpkg = new TransferPackage(110, "login {" + user.getLogin() + "} {" + user.getUncryptedPassword() + "}", null);
                                 }else if(request.equals("signin")){
                                     System.out.print("Логин: ");
                                     String login = scanner.nextLine();
@@ -222,7 +222,7 @@ public class Main {
                                     user.setLogin(login);
                                     System.out.println();
                                     line = "login";
-                                    tpkg = new TransferPackage(110, "login {" + user.getLogin() + "} {" + user.getPassword() + "} {" + user.getEmail() + "}", null);
+                                    tpkg = new TransferPackage(110, "login {" + user.getLogin() + "} {" + user.getUncryptedPassword() + "} {" + user.getEmail() + "}", null);
                                 }else{
                                     System.out.println("Ошибка: неверный ввод! Попробуйте еще раз)");
                                     line = "";
@@ -286,7 +286,7 @@ public class Main {
                         line = "";
                         continue;
                     }
-                    if (user.getPassword().length() < 8  || findMatches("[\\?\\\\!/\\^\\%\\$\\;\\#\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0){
+                    if (user.getUncryptedPassword().length() < 8  || findMatches("[\\?\\\\!/\\^\\%\\$\\;\\#\\'\\(\\)\\+\\=\\`\\~]", line).size() != 0){
                         System.out.println("Пароль должен быть не менее 8-ми символов и не содержать специальных символов!");
                         line = "";
                         continue;
@@ -358,7 +358,7 @@ public class Main {
                                 new Main().program.start(new HashSet<>(recievedPkg.getData().collect(Collectors.toList())));
                                 break;
                             case 101:
-                                TransferPackage transferPackage = new TransferPackage(666, "login {" + user.getLogin() + "} {" + user.getPassword() + "}", null);
+                                TransferPackage transferPackage = new TransferPackage(666, "login {" + user.getLogin() + "} {" + user.getUncryptedPassword() + "}", null);
                                 byte[] bytes = transferPackage.getBytes();
                                 clientSocket.send(new DatagramPacket(bytes, bytes.length, IPAddress, port));
                                 System.out.println("Соединение с сервером восстановлено!");
