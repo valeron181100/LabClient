@@ -293,6 +293,8 @@ public class Main {
                     }
 
                     tpkg.setUser(user);
+                    if(!isConnected[0])
+                        tpkg.setId(763);
                     byte[] sendData = tpkg.getBytes();
                     DatagramPacket sendingPkg = new DatagramPacket(sendData, sendData.length, IPAddress, port);
                     clientSocket.send(sendingPkg);
